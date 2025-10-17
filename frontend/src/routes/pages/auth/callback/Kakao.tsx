@@ -1,5 +1,5 @@
 import { Mail } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import Redirection from "../../../../components/common/Redirection";
 import { axiosInstance } from "../../../../api/axios";
@@ -38,7 +38,7 @@ export default function Kakao() {
     }
   };
 
-  const fetchAndSaveUser = async () => {
+  const fetchAndSaveUser = useCallback(async () => {
     setError("");
     try {
       if (accessToken) sessionStorage.setItem("access_token", accessToken);
@@ -48,7 +48,7 @@ export default function Kakao() {
     } catch (e) {
       setEmail(e instanceof Error ? e.message : "unknown error");
     }
-  };
+  }, [accessToken, navigate, setUserData]);
 
   useEffect(() => {
     if (emailYn === "N") {
@@ -56,7 +56,7 @@ export default function Kakao() {
     } else {
       fetchAndSaveUser();
     }
-  }, [emailYn]);
+  }, [emailYn, fetchAndSaveUser]);
   return (
     <>
       <>

@@ -9,10 +9,16 @@ import NotFoundPage from "./pages/NotFound";
 import Kakao from "./pages/auth/callback/Kakao";
 import Signup from "./pages/auth/Signup";
 import EmailLogin from "./pages/auth/EmailLogin";
+import { fetchuserData } from "./loader/auth.loader";
+import FullLoading from "../components/common/FullLoading";
+import ErrorState from "../components/common/ErrorState";
 
 const router = createBrowserRouter([
   {
     Component: Default,
+    loader: fetchuserData,
+    HydrateFallback: FullLoading,
+    errorElement: <ErrorState />,
     children: [
       {
         path: "",

@@ -26,7 +26,7 @@ export default function Kakao() {
         email,
       });
       setUserData({
-        _id: user._id,
+        id: user._id,
         kakaoId: user.kakaoId,
         profileImage: user.profileImage,
         nickname: user.nickname,
@@ -37,9 +37,24 @@ export default function Kakao() {
       setEmail(e instanceof Error ? e.message : "unknown error");
     }
   };
+
+  const fetchAndSaveUser = async () => {
+    setError("");
+    try {
+      if (accessToken) sessionStorage.setItem("access_token", accessToken);
+      const { data } = await axiosInstance.get("/auth/me");
+      setUserData(data);
+      navigate("/");
+    } catch (e) {
+      setEmail(e instanceof Error ? e.message : "unknown error");
+    }
+  };
+
   useEffect(() => {
     if (emailYn === "N") {
       setShowForm(true);
+    } else {
+      fetchAndSaveUser();
     }
   }, [emailYn]);
   return (

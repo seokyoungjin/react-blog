@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { axiosInstance } from "../api/axios";
 
 interface User {
   id: string;
@@ -14,6 +15,7 @@ interface AuthStore {
   isLogin: boolean;
   user: User | null;
   setUserData: (userData: User) => void;
+  logout: () => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -26,6 +28,14 @@ export const useAuthStore = create<AuthStore>()(
           state.isLogin = true;
           state.user = userData;
         }),
+      logout: async () => {
+        await axiosInstance.post("/auth/logout");
+        set((state) => {
+          state.isLogin = false;
+          state.user = null;
+          sessionStorage.removeItem("access_token");
+        });
+      },
     }))
   )
 );
